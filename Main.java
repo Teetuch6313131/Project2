@@ -5,6 +5,7 @@ import java.util.ArrayList;
 class Main {
   public static void main(String[] args) {
      int check = 1;
+     int dayMax, matPerDay;
      ArrayList<OneShareMaterial> matList = new ArrayList<OneShareMaterial>();
      ArrayList<Factory> factList = new ArrayList<Factory>();
      Scanner input = new Scanner(System.in);  
@@ -38,13 +39,13 @@ class Main {
               Factory temp = new Factory(id, product, lotSize, arrT);
               factList.add(temp);
               System.out.printf("Thread %-7s >> %-7s factory %5d units per lot   materials per lot =",Thread.currentThread().getName(), product, lotSize);
-              for(int i = 0; i < matList.size; i++){
-                System.out.printf(" %4d %s",arrT.get(i), matList.get(i).getName()+"s");
-                if(i==(matList.size)-1){System.out.printf("\n");}
+              for(int i = 0; i < matList.size(); i++){
+                System.out.printf(" %4d %s",arrT.get(i), matList.get(i).getName());
+                if(i==(matList.size())-1){System.out.printf("\n");}
                 else{System.out.printf(",");}
               }
             }
-            ///////////////////////////////materials per lot = %4d buttons,%5d zippers
+            //End of get Factory
             scan.close();
             check = 0;
           }
@@ -54,10 +55,19 @@ class Main {
           }
      }
 
-    System.out.printf("Thread %-7s >>",Thread.currentThread().getName());
-    //System.out.printf("Enter amount of material per days = ");
-    
-    //System.out.printf("Enter number of days = ");
+    System.out.printf("\nThread %-7s >>",Thread.currentThread().getName());
+    System.out.printf(" Enter amount of material per days = ");
+    matPerDay = input.nextInt();
+    System.out.printf("\nThread %-7s >>",Thread.currentThread().getName());
+    System.out.printf(" Enter number of days = ");
+    dayMax = input.nextInt();
+    for(int day = 1; day <= dayMax; day++){
+      System.out.printf("\n\nThread %-7s >> Day %3d\n",Thread.currentThread().getName(),day);
+      for(int i = 0; i < matList.size(); i++){
+        matList.get(i).put(matPerDay);
+        System.out.printf("Thread %-7s >> Put %5d %s   balance = %5d %s\n",Thread.currentThread().getName(),matPerDay,matList.get(i).getName(),matList.get(i).getBalance(),matList.get(i).getName());
+      }
+    }
   }
 }
 
@@ -89,24 +99,26 @@ class OneShareMaterial{
   }
 
   public String getName(){return name;}
+  public int getBalance(){return Balance;}
 }
 
 class Factory extends Thread{
   private int id, lotSize;
   private String product;
   private ArrayList<Integer> material = new ArrayList<Integer>();
-  private boolean on = true;
+  private boolean on;
 
   public Factory(int x, String s, int y, ArrayList<Integer> arr){
     id = x;
     product = s;
+    this.setName(s);
     lotSize = y;
     material = arr;
   }
 
   public void run(){
+    on = true;
     while(on){
-      
       
     }
   }
