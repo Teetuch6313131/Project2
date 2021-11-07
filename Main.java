@@ -37,8 +37,14 @@ class Main {
               }
               Factory temp = new Factory(id, product, lotSize, arrT);
               factList.add(temp);
+              System.out.printf("Thread %-7s >> %-7s factory %5d units per lot   materials per lot =",Thread.currentThread().getName(), product, lotSize);
+              for(int i = 0; i < matList.size; i++){
+                System.out.printf(" %4d %s",arrT.get(i), matList.get(i).getName()+"s");
+                if(i==(matList.size)-1){System.out.printf("\n");}
+                else{System.out.printf(",");}
+              }
             }
-            ///////////////////////////////
+            ///////////////////////////////materials per lot = %4d buttons,%5d zippers
             scan.close();
             check = 0;
           }
@@ -81,6 +87,8 @@ class OneShareMaterial{
       return temp; 
     }
   }
+
+  public String getName(){return name;}
 }
 
 class Factory extends Thread{
