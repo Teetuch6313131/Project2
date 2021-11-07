@@ -1,5 +1,5 @@
 package MyClass;
-import java.util.ArrayList;
+
 public class OneShareMaterial{
   private String name;
   private int Balance;
