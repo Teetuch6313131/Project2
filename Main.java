@@ -19,9 +19,9 @@ class Main {
             //Get material name;
             String line = scan.nextLine();
             String[] buf = line.split(",");
-            for(int i = 0; i < buf.length(); i++){
+            for(int i = 0; i < buf.length; i++){
               OneShareMaterial temp = new OneShareMaterial(buf[i].trim());
-              matList.append(temp);
+              matList.add(temp);
             }
             //////////////////////////////
             //get factory
@@ -32,11 +32,11 @@ class Main {
               int id = Integer.parseInt(buf[0].trim());
               int lotSize = Integer.parseInt(buf[2].trim());
               String product = buf[1].trim();
-              for(int i = 3; i < buf.length(); i++){
-                arrT.append(Integer.parseInt(buf[i].trim()));
+              for(int i = 3; i < buf.length; i++){
+                arrT.add(Integer.parseInt(buf[i].trim()));
               }
               Factory temp = new Factory(id, product, lotSize, arrT);
-              factList.append(temp);
+              factList.add(temp);
             }
             ///////////////////////////////
             scan.close();
@@ -49,17 +49,16 @@ class Main {
      }
 
     System.out.printf("Thread %-7s >>",Thread.currentThread().getName());
-    //System.out.printf("Enter amount of material per days");
+    //System.out.printf("Enter amount of material per days = ");
     
-  
+    //System.out.printf("Enter number of days = ");
   }
 }
 
 class OneShareMaterial{
   private String name;
   private int Balance;
-  public void OneShareMaterial(){}
-  public void OneShareMaterial(String n)
+  public OneShareMaterial(String n)
   {
     name=n;
     Balance=0;
@@ -90,7 +89,7 @@ class Factory extends Thread{
   private ArrayList<Integer> material = new ArrayList<Integer>();
   private boolean on = true;
 
-  public Factory(int x, String s, int y, ArrayList<Intger> arr){
+  public Factory(int x, String s, int y, ArrayList<Integer> arr){
     id = x;
     product = s;
     lotSize = y;
