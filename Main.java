@@ -67,6 +67,12 @@ class Main {
         matList.get(i).put(matPerDay);
         System.out.printf("Thread %-7s >> Put %5d %s   balance = %5d %s\n",Thread.currentThread().getName(),matPerDay,matList.get(i).getName(),matList.get(i).getBalance(),matList.get(i).getName());
       }
+      for(int i = 0; i < factList.size(); i++){
+        factList.get(i).updateMatList(matList);
+      }
+      for(int i = 0; i < factList.size(); i++){
+        factList.get(i).run();
+      }
     }
   }
 }
@@ -106,6 +112,7 @@ class Factory extends Thread{
   private int id, lotSize;
   private String product;
   private ArrayList<Integer> material = new ArrayList<Integer>();
+  private ArrayList<OneShareMaterial> materialList = new ArrayList<OneShareMaterial>();
   private boolean on;
 
   public Factory(int x, String s, int y, ArrayList<Integer> arr){
@@ -116,10 +123,20 @@ class Factory extends Thread{
     material = arr;
   }
 
+  public void updateMatList(ArrayList<OneShareMaterial> x){materialList = x;}
+
+  private void getMat(){
+    for(int i = 0; i < materialList.size(); i++){
+      int mat = materialList.get(i).get(material.get(i));
+      System.out.printf("Thread %-7s >> Get %5d %s   balance = %5d %s\n",this.getName(),mat,materialList.get(i).getName(),materialList.get(i).getBalance(),materialList.get(i).getName());
+    }
+  }
+
   public void run(){
     on = true;
     while(on){
-      
+      getMat();
+      on = false;
     }
   }
 }
