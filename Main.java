@@ -66,15 +66,10 @@ class Main {
     System.out.printf(" Enter number of days = ");
     dayMax = input.nextInt();
 
-    CyclicBarrier finish = new CyclicBarrier(factList.size());
-
-    /*for(int i = 0; i< factList.size(); i++){
-      factList.get(i).setCyclicBarrier(finish);
-    }*/
-
     Buffer b = new Buffer(factList.size());
     for(int i = 0; i< factList.size(); i++){
       factList.get(i).setBuffer(b);
+      factList.get(i).setDaymax(dayMax);
     }
 
     for(int day = 1; day <= dayMax; day++){
@@ -88,10 +83,24 @@ class Main {
         factList.get(i).updateMatList(matList);
       }
       ///////////////////////////////////////////////
-      for(int i = 0; i < factList.size(); i++){
+      if(day == 1){for(int i = 0; i < factList.size(); i++){
         factList.get(i).start();
+      }}
+      for (int i = 0; i < factList.size() ; i++) {
+                try
+                {
+                factList.get(i).join(); 
+                }
+	catch (InterruptedException e) { }
       }
       /////////////////////////////////////////////////
+      /*while(true){
+        boolean allDead = true;
+        for(int i = 0; i < factList.size(); i++){
+          if(factList.get(i).getState().equals(Thread.State.WAITING)){allDead = false;}
+        }
+        if(allDead){break;}
+      }*/
     }
   }
 }
@@ -130,13 +139,14 @@ class OneShareMaterial{
 
 class Buffer{
   private int numOfThread;
+  private int share;
 
   public Buffer(int n){numOfThread = n;}
 
   synchronized public void barrier(){
     Factory th = (Factory)(Thread.currentThread());
-    int share = th.getID();
-    while(share < th.howManyThread()){
+    share = th.getID();
+    while(share != th.howManyThread()){
       try { wait(); } catch(Exception e) {}
     }
     notifyAll();
@@ -144,7 +154,7 @@ class Buffer{
 }
 
 class Factory extends Thread{
-  private int id, lotSize, threadNumber, day, complete;
+  private int id, lotSize, threadNumber, day, complete, dayMax;
   private String product;
   private ArrayList<Integer> material = new ArrayList<Integer>();
   private ArrayList<OneShareMaterial> materialList = new ArrayList<OneShareMaterial>();
@@ -152,7 +162,6 @@ class Factory extends Thread{
   private ArrayList<Integer> matInstock = new ArrayList<Integer>();
   protected CyclicBarrier cfinish;
 
-  public Factory(){}
   public Factory(int x, String s, int y, ArrayList<Integer> arr){
     id = x;
     product = s;
@@ -166,6 +175,7 @@ class Factory extends Thread{
     day = 1;
   }
 
+  public void setDaymax(int x){dayMax = x;}
   public void setBuffer(Buffer b){buffer = b;}
   public void setCyclicBarrier(CyclicBarrier x){cfinish = x;}
   public int getID(){return id;}
@@ -200,8 +210,9 @@ class Factory extends Thread{
 
   public void run(){
     //try{cfinish.await();}catch(Exception e){}
-    buffer.barrier();
-    getMat();
-
+    //while(day <= dayMax){
+      //buffer.barrier();
+      getMat();
+      //day+=1;
+    }
   }
-}
